@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 const DEFAULT_TRACKERS = [
   // ==========================================
   // --- DAILY (Speed Run) ---
   // ==========================================
-  // Professional (Single Clean Daily Anchor)
+  // Professional
   {
     id: 'deep_work',
     pillar: 'Professional',
@@ -241,8 +241,8 @@ export default function App() {
 
   const currentScopeKey = getScopeKey(cadence);
 
-  const getValue = (trackerId) => {
-    return logs?.[currentScopeKey]?.[trackerId] ?? 0;
+  const getValue = (trackerId, scopeKey = currentScopeKey) => {
+    return logs?.[scopeKey]?.[trackerId] ?? 0;
   };
 
   const updateValue = (trackerId, nextVal) => {
@@ -304,12 +304,80 @@ export default function App() {
     return matchesCadence && matchesPillar;
   });
 
-  // Calculate cadence completion score
+  // Calculate cadence completion score for current view
   const cadenceTrackers = trackers.filter((t) => t.cadence === cadence);
   const completedCount = cadenceTrackers.filter((t) => getValue(t.id) >= t.target).length;
   const progressPercent = cadenceTrackers.length
     ? Math.round((completedCount / cadenceTrackers.length) * 100)
     : 0;
+
+  // ==========================================
+  // --- MOMENTUM METER CALCULATION ---
+  // ==========================================
+  const momentumStats = useMemo(() => {
+    const dailyTrackers = trackers.filter((t) => t.cadence === 'daily');
+    const todayHits = dailyTrackers.filter((t) => getValue(t.id, dateKey) >= t.target).length;
+    const todayScore = dailyTrackers.length ? (todayHits / dailyTrackers.length) * 100 : 0;
+
+    // Calculate consecutive active weeks (streak)
+    // A qualifying week is one where recorded entries hit an average >= 65% target
+    let consecutiveWeeks = 0;
+    const currentYear = now.getFullYear();
+    const currentWeekNum = Math.ceil(now.getDate() / 7);
+
+    // Check past 12 weeks
+    for (let i = 0; i < 12; i++) {
+      const targetWeekNum = currentWeekNum - i;
+      if (targetWeekNum <= 0) break;
+      const wKey = `${currentYear}-W${targetWeekNum}`;
+      const weekLog = logs?.[wKey];
+
+      // If current week has any activity or previous weeks had logs
+      if (i === 0) {
+        // Current week counts toward active streak if today's score > 0 or has entries
+        if (todayScore > 0 || (weekLog && Object.keys(weekLog).length > 0)) {
+          consecutiveWeeks += 1;
+        }
+      } else if (weekLog && Object.keys(weekLog).length > 0) {
+        consecutiveWeeks += 1;
+      } else {
+        break;
+      }
+    }
+
+    // Combined Momentum Formula: 60% today's execution + 40% weekly consistency factor
+    const weeklyBonus = Math.min(consecutiveWeeks * 10, 40);
+    const totalMomentum = Math.min(100, Math.round(todayScore * 0.6 + weeklyBonus));
+
+    let tierLabel = 'Ignition';
+    let tierColor = 'text-slate-400';
+    let flameColor = 'text-slate-500';
+
+    if (totalMomentum >= 85) {
+      tierLabel = 'Unstoppable Flow';
+      tierColor = 'text-emerald-300';
+      flameColor = 'text-emerald-400 animate-pulse';
+    } else if (totalMomentum >= 65) {
+      tierLabel = 'In The Pocket';
+      tierColor = 'text-emerald-400';
+      flameColor = 'text-emerald-400';
+    } else if (totalMomentum >= 35) {
+      tierLabel = 'Building Drive';
+      tierColor = 'text-teal-400';
+      flameColor = 'text-teal-400';
+    }
+
+    return {
+      totalMomentum,
+      todayHits,
+      totalDaily: dailyTrackers.length,
+      todayScore: Math.round(todayScore),
+      consecutiveWeeks,
+      tierLabel,
+      tierColor,
+      flameColor,
+    };
+  }, [trackers, logs, dateKey]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-20 font-sans">
@@ -333,14 +401,63 @@ export default function App() {
               + Add
             </button>
             <div className="text-right">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Score</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">View Score</span>
               <p className="text-lg font-black text-emerald-400">{progressPercent}%</p>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-md mx-auto px-4 pt-5">
+      <main className="max-w-md mx-auto px-4 pt-4">
+        {/* ========================================== */}
+        {/* --- MOMENTUM METER CARD --- */}
+        {/* ========================================== */}
+        <div className="mb-5 p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-emerald-950/40 border border-emerald-900/50 shadow-xl shadow-black/40">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className={`text-xl ${momentumStats.flameColor}`}>⚡</span>
+              <div>
+                <h2 className="text-xs font-black uppercase tracking-wider text-slate-200">
+                  Momentum Meter
+                </h2>
+                <p className={`text-xs font-bold ${momentumStats.tierColor}`}>
+                  {momentumStats.tierLabel}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-black text-emerald-400 font-mono">
+                {momentumStats.totalMomentum}
+              </span>
+              <span className="text-xs font-semibold text-slate-500">/100</span>
+            </div>
+          </div>
+
+          {/* Dual Bar Display */}
+          <div className="w-full bg-slate-950/80 h-2.5 rounded-full overflow-hidden border border-slate-800/80 p-0.5 mb-3">
+            <div
+              className="bg-gradient-to-r from-teal-500 via-emerald-500 to-emerald-300 h-full rounded-full transition-all duration-500"
+              style={{ width: `${momentumStats.totalMomentum}%` }}
+            />
+          </div>
+
+          {/* Quick Metrics Breakdown */}
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60 text-xs">
+            <div className="bg-slate-950/40 rounded-xl p-2 border border-slate-800/40">
+              <span className="text-[10px] uppercase font-bold text-slate-500 block">Today's Execution</span>
+              <span className="font-semibold text-slate-200">
+                {momentumStats.todayHits} / {momentumStats.totalDaily} Hits ({momentumStats.todayScore}%)
+              </span>
+            </div>
+            <div className="bg-slate-950/40 rounded-xl p-2 border border-slate-800/40">
+              <span className="text-[10px] uppercase font-bold text-slate-500 block">Weekly Streak</span>
+              <span className="font-semibold text-emerald-400">
+                {momentumStats.consecutiveWeeks} {momentumStats.consecutiveWeeks === 1 ? 'Week' : 'Weeks'} Active 🔥
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Cadence Segmented Control */}
         <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800 mb-4 shadow-inner">
           {['daily', 'weekly', 'quarterly'].map((c) => (
@@ -375,8 +492,8 @@ export default function App() {
           ))}
         </div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-slate-900 h-2.5 rounded-full mb-6 overflow-hidden border border-slate-800/80">
+        {/* Cadence View Progress Bar */}
+        <div className="w-full bg-slate-900 h-2 rounded-full mb-5 overflow-hidden border border-slate-800/80">
           <div
             className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full transition-all duration-300 rounded-full"
             style={{ width: `${progressPercent}%` }}
