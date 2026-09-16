@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const INITIAL_TRACKERS = [
+const DEFAULT_TRACKERS = [
   // ==========================================
   // --- DAILY (Speed Run) ---
   // ==========================================
-  // Professional
-  {
-    id: 'video_audits',
-    pillar: 'Professional',
-    name: 'Custom Video Audits Sent',
-    type: 'numeric',
-    unit: 'audits',
-    cadence: 'daily',
-    target: 5.0,
-    step: 1,
-    rationale: 'Send 5 screen recording audits daily showing client bottlenecks. Showing beats telling.',
-  },
+  // Professional (Single Clean Daily Anchor)
   {
     id: 'deep_work',
     pillar: 'Professional',
@@ -25,19 +14,10 @@ const INITIAL_TRACKERS = [
     cadence: 'daily',
     target: 2.0,
     step: 0.5,
-    rationale: 'Protect 2-3 hours dedicated to your highest-leverage task.',
-  },
-  {
-    id: 'niche_positioning',
-    pillar: 'Professional',
-    name: 'Category of One Positioning',
-    type: 'boolean',
-    cadence: 'daily',
-    target: 1,
-    rationale: 'Intersect domain expertise with AI implementation rather than competing as a generic agency.',
+    rationale: 'Protect 2 hours of deep, unbroken execution on your highest-leverage priority.',
   },
 
-  // Health
+  // Health Anchors
   {
     id: 'sleep_target',
     pillar: 'Health',
@@ -45,16 +25,16 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'daily',
     target: 1,
-    rationale: 'Consistent circadian timing and sleep onset for recovery.',
+    rationale: 'Consistent circadian timing and sleep onset for optimal cognitive recovery.',
   },
   {
     id: 'compound_lift',
     pillar: 'Health',
-    name: 'Heavy Compound Lift Session',
+    name: 'Heavy Compound Lift / Resistance Session',
     type: 'boolean',
     cadence: 'daily',
     target: 1,
-    rationale: 'Preserve skeletal muscle mass, bone density, and metabolic rate.',
+    rationale: 'Preserve skeletal muscle mass, bone density, and metabolic throughput.',
   },
   {
     id: 'protein_intake',
@@ -65,7 +45,7 @@ const INITIAL_TRACKERS = [
     cadence: 'daily',
     target: 160,
     step: 10,
-    rationale: 'Supports muscle protein synthesis and serves as a satiety anchor.',
+    rationale: 'Supports muscle protein synthesis and serves as a natural satiety anchor.',
   },
   {
     id: 'daily_walk',
@@ -87,7 +67,7 @@ const INITIAL_TRACKERS = [
     cadence: 'daily',
     target: 15,
     step: 5,
-    rationale: 'Diaphragmatic breathing at 5.5s cadence to train vagal tone and HRV.',
+    rationale: 'Diaphragmatic breathing at 5.5s cadence to train vagal tone and elevate HRV.',
   },
   {
     id: 'caloric_pause',
@@ -99,7 +79,7 @@ const INITIAL_TRACKERS = [
     rationale: 'Structured eating window to prevent continuous mitochondrial surplus.',
   },
 
-  // Personal
+  // Personal Anchors
   {
     id: 'first_hour_sanctuary',
     pillar: 'Personal',
@@ -107,7 +87,7 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'daily',
     target: 1,
-    rationale: 'Never rush the first 60 minutes awake; start deliberate and unreactive.',
+    rationale: 'Never rush the first 60 minutes awake; start deliberate, calm, and proactive.',
   },
   {
     id: 'small_problem_immediate',
@@ -116,7 +96,7 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'daily',
     target: 1,
-    rationale: 'Address friction within 5 minutes before minor items compound.',
+    rationale: 'Address minor friction within 5 minutes before small items compound.',
   },
   {
     id: 'unbroken_contract',
@@ -125,31 +105,33 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'daily',
     target: 1,
-    rationale: 'Confidence is the byproduct of irrefutable proof; keep your word to yourself.',
+    rationale: 'Confidence is the byproduct of irrefutable proof; keep small promises to yourself.',
   },
 
   // ==========================================
   // --- WEEKLY (Checkpoints & Sprints) ---
   // ==========================================
   {
-    id: 'proof_sprint_pitches',
+    id: 'outreach_sprints',
     pillar: 'Professional',
-    name: 'Proof-Sprint Pitches Sent',
+    name: 'Client Outreach & Audit Sprints',
+    type: 'numeric',
+    unit: 'audits',
+    cadence: 'weekly',
+    target: 5.0,
+    step: 1,
+    rationale: 'Deliver targeted proof-of-concept audits and video walkthroughs.',
+  },
+  {
+    id: 'proof_proposals',
+    pillar: 'Professional',
+    name: 'Proof-Sprint Proposals Pitched',
     type: 'numeric',
     unit: 'pitches',
     cadence: 'weekly',
     target: 2.0,
     step: 1,
-    rationale: 'Offer prospects a zero-risk 30-day proof-of-concept sprint.',
-  },
-  {
-    id: 'offer_experiment_loop',
-    pillar: 'Professional',
-    name: '2-Week Offer Experiment Loop',
-    type: 'boolean',
-    cadence: 'weekly',
-    target: 1,
-    rationale: 'Audit offers as rapid 2-week tests without emotional drag.',
+    rationale: 'Pitch zero-risk, high-ROI 30-day proof sprints to qualified prospects.',
   },
   {
     id: 'scorecard_audit',
@@ -158,7 +140,7 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'weekly',
     target: 1,
-    rationale: 'Review completion trends, flag <65% drop-offs, and adjust.',
+    rationale: 'Review completion trends, spot drop-offs under 65%, and pivot design.',
   },
   {
     id: 'flow_activity',
@@ -169,7 +151,7 @@ const INITIAL_TRACKERS = [
     cadence: 'weekly',
     target: 2.0,
     step: 1,
-    rationale: 'Fast-paced athletic movement/hobbies where focus turns thought into flow.',
+    rationale: 'Fast-paced athletic movement or hobbies where focus converts thought into flow.',
   },
 
   // ==========================================
@@ -184,7 +166,7 @@ const INITIAL_TRACKERS = [
     cadence: 'quarterly',
     target: 3.0,
     step: 1,
-    rationale: 'Land initial proof clients to establish predictable cash flow.',
+    rationale: 'Land initial proof clients to establish recurring revenue baseline.',
   },
   {
     id: 'q_core_service',
@@ -193,16 +175,16 @@ const INITIAL_TRACKERS = [
     type: 'boolean',
     cadence: 'quarterly',
     target: 1,
-    rationale: 'Package workflows into a standardized, sellable asset.',
+    rationale: 'Package custom workflows into a standardized, sellable service asset.',
   },
   {
     id: 'q_health_habits',
     pillar: 'Health',
-    name: '90-Day Unbroken Sleep & Strength Cadence',
+    name: '90-Day Unbroken Sleep & Strength Baseline',
     type: 'boolean',
     cadence: 'quarterly',
     target: 1,
-    rationale: 'Build an irrefutable 3-month baseline of health anchors.',
+    rationale: 'Lock in 3 months of consistent circadian rhythm and resistance training.',
   },
 ];
 
@@ -210,11 +192,35 @@ export default function App() {
   const [cadence, setCadence] = useState('daily');
   const [selectedPillar, setSelectedPillar] = useState('All');
   const [expandedRationale, setExpandedRationale] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
+  // Dynamic Trackers loaded from LocalStorage
+  const [trackers, setTrackers] = useState(() => {
+    const saved = localStorage.getItem('life_tracker_definitions_v4');
+    return saved ? JSON.parse(saved) : DEFAULT_TRACKERS;
+  });
+
+  // Daily / Weekly / Quarterly Logs
   const [logs, setLogs] = useState(() => {
     const saved = localStorage.getItem('life_tracker_logs');
     return saved ? JSON.parse(saved) : {};
   });
+
+  // New Tracker Form State
+  const [newTracker, setNewTracker] = useState({
+    name: '',
+    pillar: 'Professional',
+    cadence: 'daily',
+    type: 'boolean',
+    unit: '',
+    target: 1,
+    step: 1,
+    rationale: '',
+  });
+
+  useEffect(() => {
+    localStorage.setItem('life_tracker_definitions_v4', JSON.stringify(trackers));
+  }, [trackers]);
 
   useEffect(() => {
     localStorage.setItem('life_tracker_logs', JSON.stringify(logs));
@@ -254,15 +260,52 @@ export default function App() {
     updateValue(trackerId, current >= 1 ? 0 : 1);
   };
 
+  // Add / Delete Trackers Dynamically
+  const handleAddTracker = (e) => {
+    e.preventDefault();
+    if (!newTracker.name.trim()) return;
+
+    const created = {
+      id: `custom_${Date.now()}`,
+      name: newTracker.name.trim(),
+      pillar: newTracker.pillar,
+      cadence: newTracker.cadence,
+      type: newTracker.type,
+      unit: newTracker.type === 'numeric' ? newTracker.unit || 'units' : '',
+      target: Number(newTracker.target) || 1,
+      step: Number(newTracker.step) || 1,
+      rationale: newTracker.rationale.trim() || 'Custom milestone.',
+    };
+
+    setTrackers((prev) => [...prev, created]);
+    setShowAddModal(false);
+    setNewTracker({
+      name: '',
+      pillar: 'Professional',
+      cadence: 'daily',
+      type: 'boolean',
+      unit: '',
+      target: 1,
+      step: 1,
+      rationale: '',
+    });
+  };
+
+  const handleDeleteTracker = (id, name) => {
+    if (window.confirm(`Are you sure you want to remove "${name}"?`)) {
+      setTrackers((prev) => prev.filter((t) => t.id !== id));
+    }
+  };
+
   // Filter trackers
-  const activeTrackers = INITIAL_TRACKERS.filter((t) => {
+  const activeTrackers = trackers.filter((t) => {
     const matchesCadence = t.cadence === cadence;
     const matchesPillar = selectedPillar === 'All' || t.pillar === selectedPillar;
     return matchesCadence && matchesPillar;
   });
 
-  // Calculate cadence completion
-  const cadenceTrackers = INITIAL_TRACKERS.filter((t) => t.cadence === cadence);
+  // Calculate cadence completion score
+  const cadenceTrackers = trackers.filter((t) => t.cadence === cadence);
   const completedCount = cadenceTrackers.filter((t) => getValue(t.id) >= t.target).length;
   const progressPercent = cadenceTrackers.length
     ? Math.round((completedCount / cadenceTrackers.length) * 100)
@@ -279,12 +322,20 @@ export default function App() {
               Life Operating System
             </h1>
             <p className="text-xs text-slate-400 capitalize">
-              {cadence} Cadence • <span className="text-slate-300 font-mono">{currentScopeKey}</span>
+              {cadence} View • <span className="text-slate-300 font-mono">{currentScopeKey}</span>
             </p>
           </div>
-          <div className="text-right">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Score</span>
-            <p className="text-xl font-black text-emerald-400">{progressPercent}%</p>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg border border-emerald-500/40 shadow-sm transition-all"
+            >
+              + Add
+            </button>
+            <div className="text-right">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Score</span>
+              <p className="text-lg font-black text-emerald-400">{progressPercent}%</p>
+            </div>
           </div>
         </div>
       </header>
@@ -324,7 +375,7 @@ export default function App() {
           ))}
         </div>
 
-        {/* Progress Bar (Emerald Green) */}
+        {/* Progress Bar */}
         <div className="w-full bg-slate-900 h-2.5 rounded-full mb-6 overflow-hidden border border-slate-800/80">
           <div
             className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full transition-all duration-300 rounded-full"
@@ -349,12 +400,24 @@ export default function App() {
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500/90">
-                    {tracker.pillar}
-                  </span>
-                  <span className="text-xs text-slate-400">
-                    Target: <span className="text-slate-200 font-semibold">{tracker.target}</span> {tracker.unit || ''}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500/90">
+                      {tracker.pillar}
+                    </span>
+                    <span className="text-[10px] text-slate-500 capitalize">• {tracker.cadence}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400">
+                      Target: <span className="text-slate-200 font-semibold">{tracker.target}</span> {tracker.unit || ''}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteTracker(tracker.id, tracker.name)}
+                      className="text-slate-600 hover:text-red-400 text-xs px-1 transition-colors"
+                      title="Remove Tracker"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
@@ -423,10 +486,164 @@ export default function App() {
           {activeTrackers.length === 0 && (
             <div className="text-center py-12 border border-dashed border-slate-800 rounded-2xl">
               <p className="text-xs text-slate-500">No trackers found for this filter.</p>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="mt-3 text-xs text-emerald-400 font-semibold hover:underline"
+              >
+                + Add your first {cadence} tracker
+              </button>
             </div>
           )}
         </div>
       </main>
+
+      {/* Dynamic Add Tracker Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider">Add Custom Tracker</h2>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-slate-400 hover:text-white text-base"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAddTracker} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-400 font-semibold mb-1">Tracker Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Read 20 pages, Cold Plunge"
+                  value={newTracker.name}
+                  onChange={(e) => setNewTracker({ ...newTracker, name: e.target.value })}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Pillar</label>
+                  <select
+                    value={newTracker.pillar}
+                    onChange={(e) => setNewTracker({ ...newTracker, pillar: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="Professional">Professional</option>
+                    <option value="Health">Health</option>
+                    <option value="Personal">Personal</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Cadence</label>
+                  <select
+                    value={newTracker.cadence}
+                    onChange={(e) => setNewTracker({ ...newTracker, cadence: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="quarterly">Quarterly</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Type</label>
+                  <select
+                    value={newTracker.type}
+                    onChange={(e) => setNewTracker({ ...newTracker, type: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="boolean">Checkmark (Yes/No)</option>
+                    <option value="numeric">Numeric Stepper</option>
+                  </select>
+                </div>
+                {newTracker.type === 'numeric' ? (
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Unit</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., hrs, g, reps"
+                      value={newTracker.unit}
+                      onChange={(e) => setNewTracker({ ...newTracker, unit: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Target</label>
+                    <input
+                      type="number"
+                      disabled
+                      value={1}
+                      className="w-full bg-slate-950/50 border border-slate-800/50 rounded-xl px-3 py-2 text-slate-500"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {newTracker.type === 'numeric' && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Target Value</label>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      value={newTracker.target}
+                      onChange={(e) => setNewTracker({ ...newTracker, target: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Step (+ / -)</label>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      value={newTracker.step}
+                      onChange={(e) => setNewTracker({ ...newTracker, step: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-slate-400 font-semibold mb-1">Operating Rationale (Optional)</label>
+                <textarea
+                  rows="2"
+                  placeholder="Why is this habit high-leverage?"
+                  value={newTracker.rationale}
+                  onChange={(e) => setNewTracker({ ...newTracker, rationale: e.target.value })}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                ></textarea>
+              </div>
+
+              <div className="pt-2 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1 py-2 rounded-xl border border-slate-800 text-slate-400 hover:text-white font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-md shadow-emerald-950/40"
+                >
+                  Save Tracker
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
