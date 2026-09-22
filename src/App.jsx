@@ -215,7 +215,7 @@ export default function App() {
 
   // Dynamic Trackers loaded from LocalStorage
   const [trackers, setTrackers] = useState(() => {
-    const saved = localStorage.getItem('life_tracker_definitions_v6');
+    const saved = localStorage.getItem('life_tracker_definitions_v7');
     return saved ? JSON.parse(saved) : DEFAULT_TRACKERS;
   });
 
@@ -239,7 +239,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('life_tracker_definitions_v6', JSON.stringify(trackers));
+    localStorage.setItem('life_tracker_definitions_v7', JSON.stringify(trackers));
   }, [trackers]);
 
   useEffect(() => {
@@ -278,6 +278,14 @@ export default function App() {
   const toggleBoolean = (trackerId) => {
     const current = getValue(trackerId);
     updateValue(trackerId, current >= 1 ? 0 : 1);
+  };
+
+  // Modify Priority on the fly (cycles 0 -> 1 -> 2 -> 3 -> 0)
+  const cyclePriority = (trackerId, currentPriority) => {
+    const nextPriority = (currentPriority + 1) % 4;
+    setTrackers((prev) =>
+      prev.map((t) => (t.id === trackerId ? { ...t, priority: nextPriority } : t))
+    );
   };
 
   // Add / Delete Trackers Dynamically
@@ -575,7 +583,8 @@ export default function App() {
             const val = getValue(tracker.id);
             const isComplete = val >= tracker.target;
             const isExpanded = expandedRationale === tracker.id;
-            const isCoreP0 = (tracker.priority ?? 1) === 0;
+            const currentP = tracker.priority ?? 1;
+            const isCoreP0 = currentP === 0;
 
             return (
               <div
@@ -590,20 +599,30 @@ export default function App() {
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
-                    {/* Priority Modifier Badge */}
-                    <span
-                      className={`text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
+                    {/* Tappable Priority Modifier Button (Cycles 0 -> 1 -> 2 -> 3 -> 0) */}
+                    <button
+                      onClick={() => cyclePriority(tracker.id, currentP)}
+                      title="Tap to change priority"
+                      className={`text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider transition-all active:scale-90 flex items-center gap-1 cursor-pointer ${
                         isCoreP0
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                          : 'bg-slate-800 text-slate-400 border border-slate-700'
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500/30'
+                          : currentP === 1
+                          ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800 hover:bg-emerald-900'
+                          : currentP === 2
+                          ? 'bg-teal-950/80 text-teal-300 border border-teal-800 hover:bg-teal-900'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700'
                       }`}
                     >
-                      P{tracker.priority ?? 1} {isCoreP0 ? 'Core' : ''}
-                    </span>
+                      <span>P{currentP}</span>
+                      <span>{isCoreP0 ? 'Core' : 'Ring'}</span>
+                      <span className="text-[8px] opacity-60">↻</span>
+                    </button>
+
                     <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500/90">
                       {tracker.pillar}
                     </span>
                   </div>
+
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-400">
                       Target: <span className="text-slate-200 font-semibold">{tracker.target}</span> {tracker.unit || ''}
@@ -695,7 +714,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Dynamic Add Tracker Modal with Priority Selection */}
+      {/* Dynamic Add Tracker Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
