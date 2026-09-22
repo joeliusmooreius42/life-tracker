@@ -4,7 +4,7 @@ const DEFAULT_TRACKERS = [
   // ==========================================
   // --- DAILY (Speed Run) ---
   // ==========================================
-  // Professional
+  // Priority 0: Non-negotiable Core (Bullseye)
   {
     id: 'deep_work',
     pillar: 'Professional',
@@ -12,27 +12,30 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'hrs',
     cadence: 'daily',
+    priority: 0,
     target: 2.0,
     step: 0.5,
     rationale: 'Protect 2 hours of deep, unbroken execution on your highest-leverage priority.',
   },
-
-  // Health Anchors
   {
     id: 'sleep_target',
     pillar: 'Health',
     name: 'In Bed on Time (9:30 PM)',
     type: 'boolean',
     cadence: 'daily',
+    priority: 0,
     target: 1,
     rationale: 'Consistent circadian timing and sleep onset for optimal cognitive recovery.',
   },
+
+  // Priority 1: High-Leverage Anchors (Inner Ring)
   {
     id: 'compound_lift',
     pillar: 'Health',
     name: 'Heavy Compound Lift / Resistance Session',
     type: 'boolean',
     cadence: 'daily',
+    priority: 1,
     target: 1,
     rationale: 'Preserve skeletal muscle mass, bone density, and metabolic throughput.',
   },
@@ -43,10 +46,23 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'g',
     cadence: 'daily',
+    priority: 1,
     target: 160,
     step: 10,
     rationale: 'Supports muscle protein synthesis and serves as a natural satiety anchor.',
   },
+  {
+    id: 'unbroken_contract',
+    pillar: 'Personal',
+    name: 'Unbroken Self-Contract',
+    type: 'boolean',
+    cadence: 'daily',
+    priority: 1,
+    target: 1,
+    rationale: 'Confidence is the byproduct of irrefutable proof; keep small promises to yourself.',
+  },
+
+  // Priority 2: Health & Mental Flow (Mid Ring)
   {
     id: 'daily_walk',
     pillar: 'Health',
@@ -54,6 +70,7 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'hrs',
     cadence: 'daily',
+    priority: 2,
     target: 2.0,
     step: 0.5,
     rationale: 'Maintain daily non-exercise physical activity and metabolic flow.',
@@ -65,9 +82,32 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'min',
     cadence: 'daily',
+    priority: 2,
     target: 15,
     step: 5,
     rationale: 'Diaphragmatic breathing at 5.5s cadence to train vagal tone and elevate HRV.',
+  },
+  {
+    id: 'first_hour_sanctuary',
+    pillar: 'Personal',
+    name: 'First Hour Sanctuary',
+    type: 'boolean',
+    cadence: 'daily',
+    priority: 2,
+    target: 1,
+    rationale: 'Never rush the first 60 minutes awake; start deliberate, calm, and proactive.',
+  },
+
+  // Priority 3: Tactical Hygiene (Outer Ring)
+  {
+    id: 'small_problem_immediate',
+    pillar: 'Personal',
+    name: 'Small Problem Handled Immediately',
+    type: 'boolean',
+    cadence: 'daily',
+    priority: 3,
+    target: 1,
+    rationale: 'Address minor friction within 5 minutes before small items compound.',
   },
   {
     id: 'caloric_pause',
@@ -75,37 +115,9 @@ const DEFAULT_TRACKERS = [
     name: 'Energy Window / Caloric Pause',
     type: 'boolean',
     cadence: 'daily',
+    priority: 3,
     target: 1,
     rationale: 'Structured eating window to prevent continuous mitochondrial surplus.',
-  },
-
-  // Personal Anchors
-  {
-    id: 'first_hour_sanctuary',
-    pillar: 'Personal',
-    name: 'First Hour Sanctuary',
-    type: 'boolean',
-    cadence: 'daily',
-    target: 1,
-    rationale: 'Never rush the first 60 minutes awake; start deliberate, calm, and proactive.',
-  },
-  {
-    id: 'small_problem_immediate',
-    pillar: 'Personal',
-    name: 'Small Problem Handled Immediately',
-    type: 'boolean',
-    cadence: 'daily',
-    target: 1,
-    rationale: 'Address minor friction within 5 minutes before small items compound.',
-  },
-  {
-    id: 'unbroken_contract',
-    pillar: 'Personal',
-    name: 'Unbroken Self-Contract',
-    type: 'boolean',
-    cadence: 'daily',
-    target: 1,
-    rationale: 'Confidence is the byproduct of irrefutable proof; keep small promises to yourself.',
   },
 
   // ==========================================
@@ -118,6 +130,7 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'audits',
     cadence: 'weekly',
+    priority: 0,
     target: 5.0,
     step: 1,
     rationale: 'Deliver targeted proof-of-concept audits and video walkthroughs.',
@@ -129,6 +142,7 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'pitches',
     cadence: 'weekly',
+    priority: 1,
     target: 2.0,
     step: 1,
     rationale: 'Pitch zero-risk, high-ROI 30-day proof sprints to qualified prospects.',
@@ -139,6 +153,7 @@ const DEFAULT_TRACKERS = [
     name: 'Weekly Scorecard Audit & Friction Pivot',
     type: 'boolean',
     cadence: 'weekly',
+    priority: 1,
     target: 1,
     rationale: 'Review completion trends, spot drop-offs under 65%, and pivot design.',
   },
@@ -149,6 +164,7 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'sessions',
     cadence: 'weekly',
+    priority: 2,
     target: 2.0,
     step: 1,
     rationale: 'Fast-paced athletic movement or hobbies where focus converts thought into flow.',
@@ -164,6 +180,7 @@ const DEFAULT_TRACKERS = [
     type: 'numeric',
     unit: 'clients',
     cadence: 'quarterly',
+    priority: 0,
     target: 3.0,
     step: 1,
     rationale: 'Land initial proof clients to establish recurring revenue baseline.',
@@ -174,6 +191,7 @@ const DEFAULT_TRACKERS = [
     name: 'Productize 1 Repeatable AI Automation Offer',
     type: 'boolean',
     cadence: 'quarterly',
+    priority: 1,
     target: 1,
     rationale: 'Package custom workflows into a standardized, sellable service asset.',
   },
@@ -183,6 +201,7 @@ const DEFAULT_TRACKERS = [
     name: '90-Day Unbroken Sleep & Strength Baseline',
     type: 'boolean',
     cadence: 'quarterly',
+    priority: 1,
     target: 1,
     rationale: 'Lock in 3 months of consistent circadian rhythm and resistance training.',
   },
@@ -196,7 +215,7 @@ export default function App() {
 
   // Dynamic Trackers loaded from LocalStorage
   const [trackers, setTrackers] = useState(() => {
-    const saved = localStorage.getItem('life_tracker_definitions_v4');
+    const saved = localStorage.getItem('life_tracker_definitions_v6');
     return saved ? JSON.parse(saved) : DEFAULT_TRACKERS;
   });
 
@@ -211,6 +230,7 @@ export default function App() {
     name: '',
     pillar: 'Professional',
     cadence: 'daily',
+    priority: 1,
     type: 'boolean',
     unit: '',
     target: 1,
@@ -219,7 +239,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('life_tracker_definitions_v4', JSON.stringify(trackers));
+    localStorage.setItem('life_tracker_definitions_v6', JSON.stringify(trackers));
   }, [trackers]);
 
   useEffect(() => {
@@ -270,11 +290,12 @@ export default function App() {
       name: newTracker.name.trim(),
       pillar: newTracker.pillar,
       cadence: newTracker.cadence,
+      priority: Number(newTracker.priority) || 0,
       type: newTracker.type,
       unit: newTracker.type === 'numeric' ? newTracker.unit || 'units' : '',
       target: Number(newTracker.target) || 1,
       step: Number(newTracker.step) || 1,
-      rationale: newTracker.rationale.trim() || 'Custom milestone.',
+      rationale: newTracker.rationale.trim() || 'Custom priority milestone.',
     };
 
     setTrackers((prev) => [...prev, created]);
@@ -283,6 +304,7 @@ export default function App() {
       name: '',
       pillar: 'Professional',
       cadence: 'daily',
+      priority: 1,
       type: 'boolean',
       unit: '',
       target: 1,
@@ -297,44 +319,53 @@ export default function App() {
     }
   };
 
-  // Filter trackers
-  const activeTrackers = trackers.filter((t) => {
-    const matchesCadence = t.cadence === cadence;
-    const matchesPillar = selectedPillar === 'All' || t.pillar === selectedPillar;
-    return matchesCadence && matchesPillar;
-  });
+  // Filter trackers by cadence and pillar, then SORT by priority ascending (P0 first)
+  const activeTrackers = useMemo(() => {
+    return trackers
+      .filter((t) => {
+        const matchesCadence = t.cadence === cadence;
+        const matchesPillar = selectedPillar === 'All' || t.pillar === selectedPillar;
+        return matchesCadence && matchesPillar;
+      })
+      .sort((a, b) => (a.priority ?? 1) - (b.priority ?? 1));
+  }, [trackers, cadence, selectedPillar]);
 
-  // Calculate cadence completion score for current view
-  const cadenceTrackers = trackers.filter((t) => t.cadence === cadence);
-  const completedCount = cadenceTrackers.filter((t) => getValue(t.id) >= t.target).length;
-  const progressPercent = cadenceTrackers.length
-    ? Math.round((completedCount / cadenceTrackers.length) * 100)
-    : 0;
+  // Priority Rings Calculation for the Momentum Meter
+  const cadenceTrackers = useMemo(() => trackers.filter((t) => t.cadence === cadence), [trackers, cadence]);
 
-  // ==========================================
-  // --- MOMENTUM METER CALCULATION ---
-  // ==========================================
+  const priorityStats = useMemo(() => {
+    const priorities = Array.from(new Set(cadenceTrackers.map((t) => t.priority ?? 1))).sort((a, b) => a - b);
+
+    return priorities.map((p) => {
+      const items = cadenceTrackers.filter((t) => (t.priority ?? 1) === p);
+      const completed = items.filter((t) => getValue(t.id) >= t.target).length;
+      const pct = items.length ? Math.round((completed / items.length) * 100) : 0;
+      return {
+        priority: p,
+        total: items.length,
+        completed,
+        pct,
+      };
+    });
+  }, [cadenceTrackers, logs, currentScopeKey]);
+
+  // Momentum Stats & Weekly Streak
   const momentumStats = useMemo(() => {
     const dailyTrackers = trackers.filter((t) => t.cadence === 'daily');
     const todayHits = dailyTrackers.filter((t) => getValue(t.id, dateKey) >= t.target).length;
     const todayScore = dailyTrackers.length ? (todayHits / dailyTrackers.length) * 100 : 0;
 
-    // Calculate consecutive active weeks (streak)
-    // A qualifying week is one where recorded entries hit an average >= 65% target
     let consecutiveWeeks = 0;
     const currentYear = now.getFullYear();
     const currentWeekNum = Math.ceil(now.getDate() / 7);
 
-    // Check past 12 weeks
     for (let i = 0; i < 12; i++) {
       const targetWeekNum = currentWeekNum - i;
       if (targetWeekNum <= 0) break;
       const wKey = `${currentYear}-W${targetWeekNum}`;
       const weekLog = logs?.[wKey];
 
-      // If current week has any activity or previous weeks had logs
       if (i === 0) {
-        // Current week counts toward active streak if today's score > 0 or has entries
         if (todayScore > 0 || (weekLog && Object.keys(weekLog).length > 0)) {
           consecutiveWeeks += 1;
         }
@@ -345,7 +376,6 @@ export default function App() {
       }
     }
 
-    // Combined Momentum Formula: 60% today's execution + 40% weekly consistency factor
     const weeklyBonus = Math.min(consecutiveWeeks * 10, 40);
     const totalMomentum = Math.min(100, Math.round(todayScore * 0.6 + weeklyBonus));
 
@@ -393,68 +423,115 @@ export default function App() {
               {cadence} View • <span className="text-slate-300 font-mono">{currentScopeKey}</span>
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg border border-emerald-500/40 shadow-sm transition-all"
-            >
-              + Add
-            </button>
-            <div className="text-right">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">View Score</span>
-              <p className="text-lg font-black text-emerald-400">{progressPercent}%</p>
-            </div>
-          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-500/40 shadow-sm transition-all"
+          >
+            + Add Tracker
+          </button>
         </div>
       </header>
 
       <main className="max-w-md mx-auto px-4 pt-4">
         {/* ========================================== */}
-        {/* --- MOMENTUM METER CARD --- */}
+        {/* --- MOMENTUM METER AS CONCENTRIC TARGET --- */}
         {/* ========================================== */}
-        <div className="mb-5 p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-emerald-950/40 border border-emerald-900/50 shadow-xl shadow-black/40">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className={`text-xl ${momentumStats.flameColor}`}>⚡</span>
-              <div>
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-200">
-                  Momentum Meter
-                </h2>
-                <p className={`text-xs font-bold ${momentumStats.tierColor}`}>
-                  {momentumStats.tierLabel}
-                </p>
-              </div>
+        <div className="mb-5 p-5 rounded-2xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-emerald-950/30 border border-emerald-900/50 shadow-xl shadow-black/50 flex flex-col items-center">
+          <div className="w-full flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1.5">
+              <span className={`text-base ${momentumStats.flameColor}`}>⚡</span>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-200">
+                Momentum Meter
+              </h2>
             </div>
-            <div className="text-right">
-              <span className="text-2xl font-black text-emerald-400 font-mono">
+            <span className={`text-xs font-bold ${momentumStats.tierColor}`}>
+              {momentumStats.tierLabel}
+            </span>
+          </div>
+
+          {/* Concentric Target SVG Circle */}
+          <div className="relative w-52 h-52 my-1 flex items-center justify-center">
+            <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
+              {priorityStats.map((stat, idx) => {
+                const totalRings = Math.max(priorityStats.length, 3);
+                const baseRadius = 26;
+                const ringStep = 64 / totalRings;
+                const radius = baseRadius + (idx * ringStep);
+                const circumference = 2 * Math.PI * radius;
+                const strokeDashoffset = circumference - (circumference * stat.pct) / 100;
+
+                const isCore = stat.priority === 0;
+                const strokeColor = isCore
+                  ? (stat.pct === 100 ? '#10b981' : '#34d399')
+                  : stat.priority === 1
+                  ? '#059669'
+                  : '#0d9488';
+
+                return (
+                  <g key={stat.priority}>
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r={radius}
+                      fill={isCore && stat.pct === 100 ? 'rgba(16, 185, 129, 0.12)' : 'none'}
+                      stroke="rgba(30, 41, 59, 0.7)"
+                      strokeWidth={isCore ? '9' : '7'}
+                    />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r={radius}
+                      fill="none"
+                      stroke={strokeColor}
+                      strokeWidth={isCore ? '9' : '7'}
+                      strokeDasharray={circumference}
+                      strokeDashoffset={strokeDashoffset}
+                      strokeLinecap="round"
+                      className="transition-all duration-700 ease-out"
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Inner Center Bullseye Status */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Momentum</span>
+              <span className="text-3xl font-black text-emerald-400 font-mono drop-shadow">
                 {momentumStats.totalMomentum}
               </span>
-              <span className="text-xs font-semibold text-slate-500">/100</span>
+              <span className="text-[10px] font-semibold text-slate-400">
+                {momentumStats.consecutiveWeeks}W Streak 🔥
+              </span>
             </div>
           </div>
 
-          {/* Dual Bar Display */}
-          <div className="w-full bg-slate-950/80 h-2.5 rounded-full overflow-hidden border border-slate-800/80 p-0.5 mb-3">
-            <div
-              className="bg-gradient-to-r from-teal-500 via-emerald-500 to-emerald-300 h-full rounded-full transition-all duration-500"
-              style={{ width: `${momentumStats.totalMomentum}%` }}
-            />
-          </div>
-
-          {/* Quick Metrics Breakdown */}
-          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60 text-xs">
-            <div className="bg-slate-950/40 rounded-xl p-2 border border-slate-800/40">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block">Today's Execution</span>
-              <span className="font-semibold text-slate-200">
-                {momentumStats.todayHits} / {momentumStats.totalDaily} Hits ({momentumStats.todayScore}%)
-              </span>
-            </div>
-            <div className="bg-slate-950/40 rounded-xl p-2 border border-slate-800/40">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block">Weekly Streak</span>
-              <span className="font-semibold text-emerald-400">
-                {momentumStats.consecutiveWeeks} {momentumStats.consecutiveWeeks === 1 ? 'Week' : 'Weeks'} Active 🔥
-              </span>
-            </div>
+          {/* Priority Rings Legend */}
+          <div className="w-full grid grid-cols-3 gap-2 mt-2 pt-3 border-t border-slate-800/80 text-[11px]">
+            {priorityStats.slice(0, 3).map((stat) => (
+              <div
+                key={stat.priority}
+                className="bg-slate-950/60 rounded-xl p-2 border border-slate-800/60 text-center"
+              >
+                <div className="flex items-center justify-center gap-1.5 font-bold mb-0.5">
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      stat.priority === 0
+                        ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
+                        : stat.priority === 1
+                        ? 'bg-emerald-600'
+                        : 'bg-teal-600'
+                    }`}
+                  />
+                  <span className="text-slate-300">
+                    {stat.priority === 0 ? 'P0 Core' : `P${stat.priority} Ring`}
+                  </span>
+                </div>
+                <span className="text-slate-400 font-mono font-semibold">
+                  {stat.completed}/{stat.total} ({stat.pct}%)
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -492,20 +569,13 @@ export default function App() {
           ))}
         </div>
 
-        {/* Cadence View Progress Bar */}
-        <div className="w-full bg-slate-900 h-2 rounded-full mb-5 overflow-hidden border border-slate-800/80">
-          <div
-            className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full transition-all duration-300 rounded-full"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-
-        {/* Tracker Cards */}
+        {/* Tracker Cards (Sorted by Priority: P0 First) */}
         <div className="space-y-3">
           {activeTrackers.map((tracker) => {
             const val = getValue(tracker.id);
             const isComplete = val >= tracker.target;
             const isExpanded = expandedRationale === tracker.id;
+            const isCoreP0 = (tracker.priority ?? 1) === 0;
 
             return (
               <div
@@ -513,15 +583,26 @@ export default function App() {
                 className={`p-4 rounded-xl border transition-all ${
                   isComplete
                     ? 'bg-slate-900/90 border-emerald-900/60 shadow-sm shadow-emerald-950/30'
+                    : isCoreP0
+                    ? 'bg-slate-900/70 border-emerald-800/50'
                     : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700/80'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
+                    {/* Priority Modifier Badge */}
+                    <span
+                      className={`text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
+                        isCoreP0
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700'
+                      }`}
+                    >
+                      P{tracker.priority ?? 1} {isCoreP0 ? 'Core' : ''}
+                    </span>
                     <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500/90">
                       {tracker.pillar}
                     </span>
-                    <span className="text-[10px] text-slate-500 capitalize">• {tracker.cadence}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-400">
@@ -614,7 +695,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Dynamic Add Tracker Modal */}
+      {/* Dynamic Add Tracker Modal with Priority Selection */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
@@ -641,13 +722,13 @@ export default function App() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-2">
                 <div>
                   <label className="block text-slate-400 font-semibold mb-1">Pillar</label>
                   <select
                     value={newTracker.pillar}
                     onChange={(e) => setNewTracker({ ...newTracker, pillar: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs"
                   >
                     <option value="Professional">Professional</option>
                     <option value="Health">Health</option>
@@ -659,11 +740,24 @@ export default function App() {
                   <select
                     value={newTracker.cadence}
                     onChange={(e) => setNewTracker({ ...newTracker, cadence: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs"
                   >
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="quarterly">Quarterly</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Priority</label>
+                  <select
+                    value={newTracker.priority}
+                    onChange={(e) => setNewTracker({ ...newTracker, priority: Number(e.target.value) })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs"
+                  >
+                    <option value={0}>P0 (Core)</option>
+                    <option value={1}>P1 (High)</option>
+                    <option value={2}>P2 (Mid)</option>
+                    <option value={3}>P3 (Low)</option>
                   </select>
                 </div>
               </div>
